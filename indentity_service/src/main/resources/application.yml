@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: identityservice
+  config:
+    import: ${SPRING_CONFIG_IMPORT:optional:configserver:http://localhost:8071}
+  profiles:
+    active: dev
+  dinary:
+    cloud:
+      name: ${DINARY_CLOUD_NAME:de8nxh0wc}
+    api:
+      key: ${DINARY_API_KEY:878329439565671}
+      secret: ${DINARY_API_SECRET:BUu5E2lxTuE8q9233XjxCm_ok4g}
+
+jwt:
+  token:
+    access: 432000000
+    refresh : 2592000000
+
+sms:
+  api:
+    key: ${SPRING_SMS_API_KEY:D9C87FFEF4C336169BB7F0A0A8928F}
+    secret: ${SPRING_SMS_API_SECRET:89A2767738FA2CACD98EADF5E77493}
+

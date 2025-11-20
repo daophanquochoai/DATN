@@ -1,0 +1,23 @@
+spring:
+  ai:
+    openai:
+      api-key: AIzaSyD-TaHOuQgsPZ_Mw8vZeK9Erhd8XF7MAlc
+      base-url: https://generativelanguage.googleapis.com/v1beta/openai
+      chat:
+        completions-path: /chat/completions
+        options:
+          model: gemini-2.0-flash-lite
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/hospital_db}
+    username: ${SPRING_DATASOURCE_USERNAME:admin}
+    password: ${SPRING_DATASOURCE_PASSWORD:secret}
+    driver-class-name: org.postgresql.Driver
+server:
+  port: 9094
+TAVILY:
+  api-key: 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

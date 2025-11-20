@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+    <changeSet id="insert-data-into-db" author="doctor-hoai">
+        <insert tableName="roles">
+            <column name="name" value="ROLE_PATIENT"/>
+            <column name="description" value="Patients"/>
+            <column name="created_at" value="NOW()"/>
+            <column name="updated_at" value="NOW()"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="ROLE_DOCTOR"/>
+            <column name="description" value="Doctor"/>
+            <column name="created_at" value="NOW()"/>
+            <column name="updated_at" value="NOW()"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

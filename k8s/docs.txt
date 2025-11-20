@@ -1,0 +1,22 @@
+kubectl apply -f 0-redis.yaml
+
+kubectl apply -f 0-zipkin.yaml
+
+kubectl apply -f 1-configserver.yaml
+
+kubectl apply -f 1-eurekaservice.yaml
+
+kubectl apply -f 1-identity.yaml
+
+kubectl apply -f 2-manage-account.yaml
+
+kubectl apply -f 2-manage-medical.yaml
+
+
+kubectl apply -f identity-secret.yaml
+kubectl apply -f medical-secret.yaml
+kubectl apply -f account-secret.yaml
+kubectl apply -f eureka-secret.yaml
+
+
+

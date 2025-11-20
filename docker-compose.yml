@@ -1,0 +1,165 @@
+services:
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - 9411:9411
+    networks:
+      - datn
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - datn
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  configserver:
+    image: doctorhoai/datn_config:p1
+    container_name: configserver
+    ports:
+      - "8071:8071"
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    networks:
+      - datn
+
+  eurekaservice:
+    image: doctorhoai/datn_eureka:p1
+    container_name: eurekaservice
+    ports:
+      - "8070:8070"
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    depends_on:
+      zipkin:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+    environment:
+      - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411/api/v2/spans
+      - SPRING_CONFIG_IMPORT=configserver:http://configserver:8071
+    networks:
+      - datn
+  identity:
+    image: doctorhoai/datn_identity:p1
+    container_name: identity
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    depends_on:
+      redis:
+        condition: service_healthy
+      zipkin:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+      eurekaservice:
+        condition: service_healthy
+    environment:
+      - SPRING_VONAGE_API_KEY=
+      - SPRING_VONAGE_API_SECRECT=
+      - SPRING_VONAGE_FROM_NUMBER=
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?prepareThreshold=0&sslmode=require
+      - SPRING_DATASOURCE_USERNAME=postgres.kcakflildljdmjlotppb
+      - SPRING_DATASOURCE_PASSWORD=@QHoai10032003
+      - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411/api/v2/spans
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eurekaservice:8070/eureka/
+      - SENTRY_ENV=dev
+      - SPRING_CONFIG_IMPORT=configserver:http://configserver:8071
+      - SENTRY_DSN=https://a95701bd885c17f6070f1369551276a2@o4509342987911168.ingest.de.sentry.io/4509342990401616
+    networks:
+      - datn
+  medical_account:
+    image: doctorhoai/datn_manage_account:p1
+    container_name: manage_account
+    ports:
+      - "9002:9002"
+    healthcheck:
+      test: "curl --fail --silent http://localhost:9002/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    depends_on:
+      redis:
+        condition: service_healthy
+      zipkin:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+      eurekaservice:
+        condition: service_healthy
+    environment:
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?prepareThreshold=0&sslmode=require
+      - SPRING_DATASOURCE_USERNAME=postgres.kcakflildljdmjlotppb
+      - SPRING_DATASOURCE_PASSWORD=@QHoai10032003
+      - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411/api/v2/spans
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eurekaservice:8070/eureka/
+      - SENTRY_ENV=dev
+      - SPRING_CONFIG_IMPORT=configserver:http://configserver:8071
+      - SENTRY_DSN=https://a95701bd885c17f6070f1369551276a2@o4509342987911168.ingest.de.sentry.io/4509342990401616
+    networks:
+      - datn
+
+  medical_medical:
+    image: doctorhoai/datn_manage_medical:p1
+    container_name: manage_medical
+    ports:
+      - "9003:9003"
+    healthcheck:
+      test: "curl --fail --silent http://localhost:9003/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    depends_on:
+      redis:
+        condition: service_healthy
+      zipkin:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+      eurekaservice:
+        condition: service_healthy
+    environment:
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?prepareThreshold=0&sslmode=require
+      - SPRING_DATASOURCE_USERNAME=postgres.kcakflildljdmjlotppb
+      - SPRING_DATASOURCE_PASSWORD=@QHoai10032003
+      - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411/api/v2/spans
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eurekaservice:8070/eureka/
+      - SENTRY_ENV=dev
+      - SPRING_CONFIG_IMPORT=configserver:http://configserver:8071
+      - SENTRY_DSN=https://a95701bd885c17f6070f1369551276a2@o4509342987911168.ingest.de.sentry.io/4509342990401616
+    networks:
+      - datn
+networks:
+  datn:
+    driver: bridge

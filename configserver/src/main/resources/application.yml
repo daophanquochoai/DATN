@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: configserver
+  profiles:
+    active: native
+    cloud:
+      config:
+        server:
+          native:
+            search-locations: "classpath:/config"
+# cau hinh theo doi suc khoe actuator
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+    circuitbreakers:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+#  viet theo doi cua zipkin
+pattern:
+  level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+# cau hinh port
+server:
+  port: 8071
