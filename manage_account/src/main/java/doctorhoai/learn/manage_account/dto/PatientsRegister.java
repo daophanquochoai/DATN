@@ -22,46 +22,67 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 public class PatientsRegister {
-    // patients
-    @NotNull(message = "Full name can't empty", groups = {CreatePatient.class, UpdatePatient.class})
-    @NotBlank(message = "Full name can't blank", groups = {CreatePatient.class, UpdatePatient.class})
+    @NotNull(message = "Họ tên không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
+    @NotBlank(message = "Họ tên không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
     private String fullName;
-    @NotNull(message = "Date of birth is required", groups = {CreatePatient.class, UpdatePatient.class})
-    @Past(message = "Date of birth must be in the past", groups = {CreatePatient.class, UpdatePatient.class})
-    @Adult
+
+    @NotNull(message = "Ngày sinh là bắt buộc", groups = {CreatePatient.class, UpdatePatient.class})
+    @Past(message = "Ngày sinh phải nhỏ hơn ngày hiện tại", groups = {CreatePatient.class, UpdatePatient.class})
+    @Adult(message = "Bệnh nhân phải đủ 18 tuổi")
     private LocalDate dob;
-    @NotNull(message = "Gender can't empty", groups = {CreatePatient.class, UpdatePatient.class})
-    private boolean gender;
-    @NotNull(message = "Address can't empty", groups = {CreatePatient.class, UpdatePatient.class})
-    @NotBlank(message = "Address can't blank", groups = {CreatePatient.class, UpdatePatient.class})
+
+    @NotNull(message = "Giới tính không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
+    private Boolean gender;
+
+    @NotNull(message = "Địa chỉ không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
+    @NotBlank(message = "Địa chỉ không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
     private String address;
-    @NotNull(message = "Insurance code can't empty", groups = {CreatePatient.class, UpdatePatient.class})
-    @NotBlank(message = "Insurance code can't blank", groups = {CreatePatient.class, UpdatePatient.class})
+
+    @NotNull(message = "Mã BHYT không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
+    @NotBlank(message = "Mã BHYT không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
     private String insuranceCode;
-    @NotNull(message = "Emergency contact code can't empty", groups = {CreatePatient.class, UpdatePatient.class})
-    @NotBlank(message = "Emergency contact code can't blank", groups = {CreatePatient.class, UpdatePatient.class})
+
+    @NotNull(message = "Số liên hệ khẩn cấp không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
+    @NotBlank(message = "Số liên hệ khẩn cấp không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
     private String emergencyContact;
-    @NotNull(message = "Citizen id code can't empty", groups = {CreatePatient.class, UpdatePatient.class})
-    @NotBlank(message = "Citizen id contact code can't blank", groups = {CreatePatient.class, UpdatePatient.class})
-    @Pattern(regexp = "^(\\d{9}|\\d{12})$", message = "Citizen ID must be 9 or 12 digits", groups = {CreatePatient.class, UpdatePatient.class})
+
+    @NotNull(message = "CCCD không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
+    @NotBlank(message = "CCCD không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
+    @Pattern(
+            regexp = "^(\\d{9}|\\d{12})$",
+            message = "CCCD phải gồm 9 hoặc 12 chữ số",
+            groups = {CreatePatient.class, UpdatePatient.class})
     private String citizenId;
-    @NotNull(message = "Job code can't empty", groups = {CreatePatient.class, UpdatePatient.class})
-    @NotBlank(message = "Job contact code can't blank", groups = {CreatePatient.class, UpdatePatient.class})
+
+    @NotNull(message = "Nghề nghiệp không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
+    @NotBlank(message = "Nghề nghiệp không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
     private String job;
-    //account
-    @NotBlank(message = "Phone number can't be blank", groups = {CreatePatient.class, UpdatePatient.class})
-    @Pattern(regexp = "^(0\\d{9})$", message = "Phone number must be 10 digits and start with 0", groups = {CreatePatient.class, UpdatePatient.class})
+
+    // -------------------- ACCOUNT INFO --------------------
+    @NotBlank(message = "Số điện thoại không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
+    @Pattern(
+            regexp = "^(0\\d{9})$",
+            message = "Số điện thoại phải gồm 10 số và bắt đầu bằng 0",
+            groups = {CreatePatient.class, UpdatePatient.class})
     private String phoneNumber;
-    @NotBlank(message = "Password can't be blank", groups = {CreatePatient.class})
+
+    @NotBlank(message = "Email không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
+    @Pattern(
+            regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+            message = "Email không đúng định dạng",
+            groups = {CreatePatient.class, UpdatePatient.class})
+    private String email;
+
+    @NotBlank(message = "Mật khẩu không được để trống", groups = {CreatePatient.class})
     @Pattern(
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "Password must be at least 8 characters long and include at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character",
-            groups = {CreatePatient.class}
-    )
+            message = "Mật khẩu phải tối thiểu 8 ký tự, gồm 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt",
+            groups = {CreatePatient.class})
     private String password;
-    @NotNull(message = "Status can't empty", groups = {CreatePatient.class, UpdatePatient.class})
+
+    @NotNull(message = "Trạng thái tài khoản không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
     private AccountStatus status;
-    // role
-    @NotNull(message = "Role can't empty", groups = {CreatePatient.class, UpdatePatient.class})
+
+    @NotNull(message = "Vai trò không được để trống", groups = {CreatePatient.class, UpdatePatient.class})
     private UUID roleId;
 }

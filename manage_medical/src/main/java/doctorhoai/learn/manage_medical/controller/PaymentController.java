@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +23,21 @@ public class PaymentController {
     private final PaymentService paymentService;
     private final AppointmentService appointmentService;
 
+    @Value("${vnpay.secret-key}")
+    private String SPRING_VNPAY_SECRECT_KEY;
+    @Value("${vnpay.tmn-code}")
+    private String SPRING_VNPAY_TMN_CODE;
+    @Value("${vnpay.return-url}")
+    private String SPRING_VNPAY_URL;
+
     @PostMapping("/create")
     public ResponseEntity<?> createPayment(
             @RequestBody PaymentRequest request,
             @RequestParam String ipAddress) {
         log.info("IPAddress : " + ipAddress);
+        log.info("SPRING_VNPAY_SECRECT_KEY : " + SPRING_VNPAY_SECRECT_KEY);
+        log.info("SPRING_VNPAY_TMN_CODE : " + SPRING_VNPAY_TMN_CODE);
+        log.info("SPRING_VNPAY_URL : " + SPRING_VNPAY_URL);
         try {
             String paymentUrl = paymentService.createPayment(
                     request.getAmount(),

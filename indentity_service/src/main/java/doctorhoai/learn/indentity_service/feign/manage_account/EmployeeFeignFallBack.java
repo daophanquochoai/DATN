@@ -11,6 +11,7 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Component
@@ -74,6 +75,11 @@ public class EmployeeFeignFallBack implements FallbackFactory<EmployeeFeign> {
 
             @Override
             public ResponseEntity<ResponseObject> resetPassword(String phone) {
+                return fallBack.processFallback(cause);
+            }
+
+            @Override
+            public ResponseEntity<ResponseObject> countShiftInAppointments(LocalDate startDate, LocalDate endDate) {
                 return fallBack.processFallback(cause);
             }
         };

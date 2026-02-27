@@ -15,9 +15,9 @@ spec:
     metadata:
       annotations:
         kompose.version: 1.35.0 (9532ceef3)
-        prometheus.io/scrape: "true"                 # ✅ bật scrape
-        prometheus.io/path: "/actuator/prometheus"   # ✅ đường metrics Spring Boot
-        prometheus.io/port: "9003"                   # ✅ cổng container
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "9003"
       labels:
         io.kompose.service: manage-medical
     spec:
@@ -40,28 +40,30 @@ spec:
           envFrom:
             - secretRef:
                 name: medical-secret
-          image: doctorhoai/datn_manage_medical:k15
+          image: doctorhoai/datn_manage_medical:z2
           resources:
             requests:
-              memory: 512Mi
-              cpu: 200m
+              cpu: "300m"
+              memory: "768Mi"
             limits:
-              memory: 1024Mi
-              cpu: 1000m
+              cpu: "600m"
+              memory: "1229Mi"
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 9003
-            initialDelaySeconds: 60
-            periodSeconds: 10
+            initialDelaySeconds: 150
             timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 5
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 9003
-            initialDelaySeconds: 60
-            periodSeconds: 10
+            initialDelaySeconds: 150
             timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 5
           name: manage-medical
           ports:
             - containerPort: 9003

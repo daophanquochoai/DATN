@@ -21,9 +21,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-
   configserver:
-    image: doctorhoai/datn_config:p1
+    image: doctorhoai/datn_config:h10
     container_name: configserver
     ports:
       - "8071:8071"
@@ -37,7 +36,7 @@ services:
       - datn
 
   eurekaservice:
-    image: doctorhoai/datn_eureka:p1
+    image: doctorhoai/datn_eureka:h10
     container_name: eurekaservice
     ports:
       - "8070:8070"
@@ -58,7 +57,7 @@ services:
     networks:
       - datn
   identity:
-    image: doctorhoai/datn_identity:p1
+    image: doctorhoai/datn_identity:h10
     container_name: identity
     ports:
       - "8080:8080"
@@ -94,7 +93,7 @@ services:
     networks:
       - datn
   medical_account:
-    image: doctorhoai/datn_manage_account:p1
+    image: doctorhoai/datn_manage_account:h10
     container_name: manage_account
     ports:
       - "9002:9002"
@@ -128,7 +127,7 @@ services:
       - datn
 
   medical_medical:
-    image: doctorhoai/datn_manage_medical:p1
+    image: doctorhoai/datn_manage_medical:h10
     container_name: manage_medical
     ports:
       - "9003:9003"
@@ -158,6 +157,25 @@ services:
       - SENTRY_ENV=dev
       - SPRING_CONFIG_IMPORT=configserver:http://configserver:8071
       - SENTRY_DSN=https://a95701bd885c17f6070f1369551276a2@o4509342987911168.ingest.de.sentry.io/4509342990401616
+      - SPRING_VNPAY_SECRECT_KEY=DE8AE7IV68DT4F7TVYOPHVVRJF4CQZUY
+      - SPRING_VNPAY_TMN_CODE=3K48WR91
+      - SPRING_VNPAY_URL=http://do-an-tot-nghiep.id.vn/payment/result
+    networks:
+      - datn
+  nginx:
+    image: nginx:latest
+    container_name: nginx_gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - identity
+      - medical_account
+      - medical_medical
+      - eurekaservice
+      - configserver
+      - zipkin
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - datn
 networks:

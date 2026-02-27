@@ -84,7 +84,8 @@ public class PatientsServiceImpl implements PatientsService {
                 .accountId(account)
                 .fullName(patientsRegister.getFullName())
                 .dob(patientsRegister.getDob())
-                .gender(patientsRegister.isGender())
+                .email(patientsRegister.getEmail())
+                .gender(patientsRegister.getGender())
                 .address(patientsRegister.getAddress())
                 .insuranceCode(patientsRegister.getInsuranceCode())
                 .emergencyContact(patientsRegister.getEmergencyContact())
@@ -98,6 +99,7 @@ public class PatientsServiceImpl implements PatientsService {
                 .patientId(patientsSaved.getPatientId())
                 .fullName(patientsSaved.getFullName())
                 .dob(patientsSaved.getDob())
+                .email(patientsSaved.getEmail())
                 .gender(patientsSaved.isGender())
                 .address(patientsSaved.getAddress())
                 .insuranceCode(patientsSaved.getInsuranceCode())
@@ -203,7 +205,8 @@ public class PatientsServiceImpl implements PatientsService {
         // mapping update
         patients.setFullName(register.getFullName());
         patients.setDob(register.getDob());
-        patients.setGender(register.isGender());
+        patients.setGender(register.getGender());
+        patients.setEmail(register.getEmail());
         patients.setAddress(register.getAddress());
         patients.setInsuranceCode(register.getInsuranceCode());
         patients.setEmergencyContact(register.getEmergencyContact());

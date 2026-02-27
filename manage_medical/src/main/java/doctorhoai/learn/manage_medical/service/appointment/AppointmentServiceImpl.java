@@ -11,6 +11,7 @@ import doctorhoai.learn.manage_medical.dto.AppointmentDto;
 import doctorhoai.learn.manage_medical.dto.ResponseObject;
 import doctorhoai.learn.manage_medical.dto.filter.AppointmentFilter;
 import doctorhoai.learn.manage_medical.dto.filter.PageObject;
+import doctorhoai.learn.manage_medical.dto.request.ShiftCount;
 import doctorhoai.learn.manage_medical.exception.exception.*;
 import doctorhoai.learn.manage_medical.feign.dto.AccountStatus;
 import doctorhoai.learn.manage_medical.feign.dto.employee.EmployeeDto;
@@ -448,6 +449,11 @@ public class AppointmentServiceImpl implements AppointmentService{
                     .status(i.getStatus())
                     .build();
         }).toList();
+    }
+
+    @Override
+    public List<UUID> countShiftInAppointments(ShiftCount filter) {
+        return appointmentRepository.getShiftCountByFilter(filter.getStartDate(), filter.getEndDate());
     }
 
     public PatientsDto getPatientById(List<PatientsDto> patientsDtos, UUID id){

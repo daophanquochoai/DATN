@@ -10,10 +10,12 @@ import doctorhoai.learn.indentity_service.feign.dto.groupvalidate.CreateEmployee
 import doctorhoai.learn.indentity_service.feign.dto.groupvalidate.UpdateEmployee;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @FeignClient(
@@ -109,5 +111,11 @@ public interface EmployeeFeign {
     @PostMapping("/reset")
     ResponseEntity<ResponseObject> resetPassword(
             @RequestParam String phone
+    );
+
+    @GetMapping("/count-shifts")
+    ResponseEntity<ResponseObject> countShiftInAppointments(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     );
 }

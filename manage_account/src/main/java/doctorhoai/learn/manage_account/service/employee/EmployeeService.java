@@ -6,9 +6,10 @@ import doctorhoai.learn.manage_account.dto.UpdatePassword;
 import doctorhoai.learn.manage_account.dto.filter.EmployeesFilter;
 import doctorhoai.learn.manage_account.dto.filter.PageObject;
 import doctorhoai.learn.manage_account.model.Account.AccountStatus;
-import doctorhoai.learn.manage_account.model.Employees;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface EmployeeService {
@@ -23,4 +24,5 @@ public interface EmployeeService {
     EmployeeDto getEmployeeByUsername(String username);
     EmployeeDto updatePasswordByOPT(String password, String phone);
     EmployeeDto resetPassword(String phone);
+    Map<String, Object> getTopEmployees(LocalDate startDate, LocalDate endDate, int topN);
 }

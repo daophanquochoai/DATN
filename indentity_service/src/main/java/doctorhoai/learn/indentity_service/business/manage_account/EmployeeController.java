@@ -12,11 +12,13 @@ import doctorhoai.learn.indentity_service.util.FunctionCommon;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -209,4 +211,12 @@ public class EmployeeController {
         return employeeFeign.resetPassword(phone);
     }
 
+    @GetMapping("/count-shifts")
+    @PreAuthorize("hasAnyRole('DOCTOR','ADMIN')")
+    ResponseEntity<ResponseObject> countShiftInAppointments(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ){
+        return employeeFeign.countShiftInAppointments(startDate, endDate);
+    }
 }

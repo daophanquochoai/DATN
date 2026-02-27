@@ -1,5 +1,6 @@
 package doctorhoai.learn.manage_medical.repository;
 
+import doctorhoai.learn.manage_medical.dto.request.ShiftCount;
 import doctorhoai.learn.manage_medical.model.AppointmentRecord;
 import doctorhoai.learn.manage_medical.model.appointment.Appointment;
 import doctorhoai.learn.manage_medical.model.appointment.AppointmentStatus;
@@ -164,4 +165,16 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
     Optional<AppointmentRecord> getOldAppointment(List<UUID> shiftIds, String icd10Id);
 
     List<Appointment> getAppointmentByShiftId(UUID shiftId);
+
+    @Query(value = """
+    SELECT a.shift_id 
+    FROM appointments a 
+    JOIN appointment_records ar ON a.appointment_id = ar.appointment_id
+    WHERE ( CAST(:startDate AS date) IS NULL OR DATE(a.created_at) >= CAST(:startDate AS date))
+      AND (CAST(:endDate AS date) IS NULL OR DATE(a.created_at) <= CAST(:endDate AS date))
+""", nativeQuery = true)
+    List<UUID> getShiftCountByFilter(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
 }

@@ -196,7 +196,7 @@
                 <version>3.4.1</version>
                 <configuration>
                     <to>
-                        <image>doctorhoai/datn_manage_medical:h2</image>
+                        <image>doctorhoai/datn_manage_medical:z4</image>
                     </to>
                 </configuration>
             </plugin>

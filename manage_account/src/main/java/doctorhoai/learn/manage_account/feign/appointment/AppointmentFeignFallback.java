@@ -46,6 +46,11 @@ public class AppointmentFeignFallback implements FallbackFactory<AppointmentFeig
             public ResponseEntity<ResponseObject> removeAppointmentByShiftId(UUID id) {
                 return fallBack.processFallback(cause);
             }
+
+            @Override
+            public ResponseEntity<ResponseObject> countShiftInAppointments(LocalDate startDate, LocalDate endDate) {
+                return fallBack.processFallback(cause);
+            }
         };
     }
 }

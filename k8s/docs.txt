@@ -1,9 +1,7 @@
 kubectl apply -f 0-redis.yaml
-
 kubectl apply -f 0-zipkin.yaml
 
 kubectl apply -f 1-configserver.yaml
-
 kubectl apply -f 1-eurekaservice.yaml
 
 kubectl apply -f 1-identity.yaml
@@ -19,4 +17,21 @@ kubectl apply -f account-secret.yaml
 kubectl apply -f eureka-secret.yaml
 
 
+kubectl create namespace monitoring
+kubectl apply -f prometheus-configmap.yaml
+kubectl apply -f prometheus-rbac.yaml
+kubectl apply -f promethus.yaml
+kubectl apply -f grafana.yaml
 
+
+kubectl delete -f 1-identity.yaml
+
+kubectl delete -f 2-manage-account.yaml
+
+kubectl delete -f 2-manage-medical.yaml
+
+
+kubectl delete -f prometheus-configmap.yaml
+kubectl delete -f prometheus-rbac.yaml
+kubectl delete -f promethus.yaml
+kubectl delete -f grafana.yaml

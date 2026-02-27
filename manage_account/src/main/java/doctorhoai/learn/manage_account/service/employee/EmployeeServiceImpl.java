@@ -1,14 +1,13 @@
 package doctorhoai.learn.manage_account.service.employee;
 
 import doctorhoai.learn.base_domain.exception.BadException;
-import doctorhoai.learn.manage_account.dto.EmployeeDto;
-import doctorhoai.learn.manage_account.dto.EmployeeRegister;
-import doctorhoai.learn.manage_account.dto.UpdatePassword;
+import doctorhoai.learn.manage_account.dto.*;
 import doctorhoai.learn.manage_account.dto.filter.EmployeesFilter;
 import doctorhoai.learn.manage_account.dto.filter.PageObject;
 import doctorhoai.learn.manage_account.exception.exception.EmployeeNotFoundException;
 import doctorhoai.learn.manage_account.exception.exception.PasswordNotCorrect;
 import doctorhoai.learn.manage_account.exception.exception.RoomNotFoundException;
+import doctorhoai.learn.manage_account.feign.appointment.AppointmentFeign;
 import doctorhoai.learn.manage_account.mapper.CommonFunction;
 import doctorhoai.learn.manage_account.mapper.Mapper;
 import doctorhoai.learn.manage_account.model.*;
@@ -21,14 +20,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -47,6 +45,8 @@ public class EmployeeServiceImpl implements EmployeeService{
     private final EmployeesRepository employeesRepository;
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final CommonFunction commonFunction;
+    private final AppointmentFeign appointmentFeign;
+    private final ShiftEmployeeRepository shiftEmployeeRepository;
 
     @Override
     @Transactional
@@ -179,6 +179,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         employees.setHiredDate(register.getHiredDate());
         employees.setEmail(register.getEmail());
         employees.getAccountId().setStatus(register.getStatus());
+        employees.setProfile(register.getProfile());
         if( employees.getRoomId().getRoomId() != register.getRoom()){
             Rooms rooms = roomsRepository.findByRoomId(register.getRoom()).orElseThrow(RoomNotFoundException::new);
             employees.setRoomId(rooms);
@@ -300,6 +301,32 @@ public class EmployeeServiceImpl implements EmployeeService{
         employees.getAccountId().setPassword(passwordEncoder.encode("@Hoai100303"));
         employeesRepository.save(employees);
         return mapper.convertToEmployeeDto(employees);
+    }
+
+    @Override
+    public Map<String, Object> getTopEmployees(LocalDate startDate, LocalDate endDate, int topN) {
+        ResponseEntity<ResponseObject> response = appointmentFeign.countShiftInAppointments(startDate, endDate);
+        List<UUID> shiftIds = new ArrayList<>();
+        if (response.getStatusCode().is2xxSuccessful()) {
+            ResponseObject responseObject = response.getBody();
+            shiftIds = (List<UUID>) responseObject.getData();
+        }
+        if (shiftIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        List<EmployeeShiftCounter> shiftCounters = shiftEmployeeRepository.countShiftsByEmployeeId(shiftIds);
+        Map<String, Object> result = new LinkedHashMap<>();
+        for (int i = 0; i < Math.min(topN, shiftCounters.size()); i++) {
+            EmployeeShiftCounter counter = shiftCounters.get(i);
+            EmployeeDto employeeDto = mapper.convertToEmployeeDto(counter.getEmployees());
+
+            Map<String, Object> employeeData = new HashMap<>();
+            employeeData.put("employee", employeeDto);
+            employeeData.put("shiftCount", counter.getShiftCount());
+
+            result.put("rank_" + (i + 1), employeeData);
+        }
+        return result;
     }
 
 }

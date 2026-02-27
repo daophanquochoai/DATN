@@ -15,9 +15,9 @@ spec:
     metadata:
       annotations:
         kompose.version: 1.35.0 (9532ceef3)
-        prometheus.io/scrape: "true"                 # ✅ bật scrape
-        prometheus.io/path: "/actuator/prometheus"   # ✅ đường metrics Spring Boot
-        prometheus.io/port: "8080"                   # ✅ cổng container
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8080"
       labels:
         io.kompose.service: identity
     spec:
@@ -36,28 +36,39 @@ spec:
           envFrom:
             - secretRef:
                 name: identity-secret
-          image: doctorhoai/datn_identity:k15
+          image: doctorhoai/datn_identity:z2
           resources:
             requests:
-              memory: 512Mi
-              cpu: 200m
+              cpu: "300m"
+              memory: "768Mi"
             limits:
-              memory: 1024Mi
-              cpu: 1000m
+              cpu: "600m"
+              memory: "1229Mi"
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 5
+            timeoutSeconds: 5
+
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 10
+            initialDelaySeconds: 0
             timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 10
+            initialDelaySeconds: 0
             timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
           name: identity
           ports:
             - containerPort: 8080
@@ -69,9 +80,9 @@ kind: Service
 metadata:
   annotations:
     kompose.version: 1.35.0 (9532ceef3)
-    prometheus.io/scrape: "true"                 # ✅ bật scrape
-    prometheus.io/path: "/actuator/prometheus"   # ✅ đường metrics Spring Boot
-    prometheus.io/port: "8080"                   # ✅ cổng container
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/actuator/prometheus"
+    prometheus.io/port: "8080"
   labels:
     io.kompose.service: identity
   name: identity

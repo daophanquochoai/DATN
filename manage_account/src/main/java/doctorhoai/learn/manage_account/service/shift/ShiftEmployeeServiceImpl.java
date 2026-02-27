@@ -50,35 +50,35 @@ public class ShiftEmployeeServiceImpl implements ShiftEmployeeService{
 
     @Override
     public List<ShiftEmployeeDto> createShiftEmployee(ShiftEmployeeCreate create) {
-        Employees employees = employeesRepository.getEmployeesByEmployeeId(create.getEmployeeId()).orElseThrow(EmployeeNotFoundException::new);
-        if( create.getShiftIds().size() <= 0 ){
-            throw new BadException("Lịch khám đang rỗng");
-        }
-        List<ShiftEmployee> sEmployees = shiftEmployeeRepository.getShiftEmployeeByEmployees_EmployeeIdAndDate(create.getEmployeeId(), create.getShiftIds().get(0).getDate());
-        if(!sEmployees.isEmpty()){
-            throw new BadException("Lịch đã được tạo");
-        }
-        List<UUID> idsShift = create.getShiftIds().stream().map( t -> t.getShiftDto().getId()).toList();
-        List<Shift> shifts = shiftRepository.getShiftByIds(idsShift);
-        List<ShiftEmployee> shiftEmployees = create.getShiftIds().stream().map( t -> {
-            ShiftEmployee shiftEmployee = ShiftEmployee.builder()
-                    .shift(getShiftById(t.getShiftDto().getId(), shifts))
-                    .date(t.getDate())
-                    .employees(employees)
-                    .patientSlot(t.getPatientSlot())
-                    .build();
-            return shiftEmployee;
-        }).toList();
-        List<ShiftEmployee> shiftE = shiftEmployeeRepository.saveAll(shiftEmployees);
-        List<ShiftEmployeeDto> shiftEDto = shiftE.stream().map( t -> {
-            return ShiftEmployeeDto.builder()
-                    .id(t.getId())
-                    .date(t.getDate())
-                    .shift(mapper.convertToShiftDto(t.getShift()))
-                    .patientSlot(t.getPatientSlot())
-                    .build();
-        }).toList();
-        return shiftEDto;
+//        Employees employees = employeesRepository.getEmployeesByEmployeeId(create.getEmployeeId()).orElseThrow(EmployeeNotFoundException::new);
+//        if( create.getShiftIds().size() <= 0 ){
+//            throw new BadException("Lịch khám đang rỗng");
+//        }
+//        List<ShiftEmployee> sEmployees = shiftEmployeeRepository.getShiftEmployeeByEmployees_EmployeeIdAndDate(create.getEmployeeId(), create.getShiftIds().get(0).getDate());
+//        if(!sEmployees.isEmpty()){
+//            throw new BadException("Lịch đã được tạo");
+//        }
+//        List<UUID> idsShift = create.getShiftIds().stream().map( t -> t.getShiftDto().getId()).toList();
+//        List<Shift> shifts = shiftRepository.getShiftByIds(idsShift);
+//        List<ShiftEmployee> shiftEmployees = create.getShiftIds().stream().map( t -> {
+//            ShiftEmployee shiftEmployee = ShiftEmployee.builder()
+//                    .shift(getShiftById(t.getShiftDto().getId(), shifts))
+//                    .date(t.getDate())
+//                    .employees(employees)
+//                    .patientSlot(t.getPatientSlot())
+//                    .build();
+//            return shiftEmployee;
+//        }).toList();
+//        List<ShiftEmployee> shiftE = shiftEmployeeRepository.saveAll(shiftEmployees);
+//        List<ShiftEmployeeDto> shiftEDto = shiftE.stream().map( t -> {
+//            return ShiftEmployeeDto.builder()
+//                    .id(t.getId())
+//                    .date(t.getDate())
+//                    .shift(mapper.convertToShiftDto(t.getShift()))
+//                    .patientSlot(t.getPatientSlot())
+//                    .build();
+//        }).toList();
+        return null;
     }
 
     @Override
@@ -112,8 +112,8 @@ public class ShiftEmployeeServiceImpl implements ShiftEmployeeService{
                 .data(shiftEmployees.getContent().stream().map( t -> {
                     return ShiftEmployeeDto.builder()
                             .id(t.getId())
-                            .date(t.getDate())
-                            .employeeDto(mapper.convertToEmployeeDto(t.getEmployees()))
+                            .date(t.getShiftDayEmployee().getDate())
+                            .employeeDto(mapper.convertToEmployeeDto(t.getShiftDayEmployee().getEmployees()))
                             .shift(mapper.convertToShiftDto(t.getShift()))
                             .patientSlot(t.getPatientSlot())
                             .patientSlotBooked(data.getOrDefault(t.getId().toString(), 0))
@@ -127,8 +127,8 @@ public class ShiftEmployeeServiceImpl implements ShiftEmployeeService{
         ShiftEmployee shiftEmployee = shiftEmployeeRepository.findById(shiftId).orElseThrow(ShiftNotFoundException::new);
         return ShiftEmployeeDto.builder()
                 .id(shiftEmployee.getId())
-                .employeeDto(mapper.convertToEmployeeDto(shiftEmployee.getEmployees()))
-                .date(shiftEmployee.getDate())
+                .employeeDto(mapper.convertToEmployeeDto(shiftEmployee.getShiftDayEmployee().getEmployees()))
+                .date(shiftEmployee.getShiftDayEmployee().getDate())
                 .shift(mapper.convertToShiftDto(shiftEmployee.getShift()))
                 .patientSlot(shiftEmployee.getPatientSlot())
                 .build();
@@ -140,8 +140,8 @@ public class ShiftEmployeeServiceImpl implements ShiftEmployeeService{
         return shiftEmployees.stream().map( t -> {
             return ShiftEmployeeDto.builder()
                     .id(t.getId())
-                    .employeeDto(mapper.convertToEmployeeDto(t.getEmployees()))
-                    .date(t.getDate())
+                    .employeeDto(mapper.convertToEmployeeDto(t.getShiftDayEmployee().getEmployees()))
+                    .date(t.getShiftDayEmployee().getDate())
                     .shift(mapper.convertToShiftDto(t.getShift()))
                     .patientSlot(t.getPatientSlot())
                     .build();
@@ -154,8 +154,8 @@ public class ShiftEmployeeServiceImpl implements ShiftEmployeeService{
         return shiftEmployees.stream().map( t -> {
             return ShiftEmployeeDto.builder()
                     .id(t.getId())
-                    .employeeDto(mapper.convertToEmployeeDto(t.getEmployees()))
-                    .date(t.getDate())
+                    .employeeDto(mapper.convertToEmployeeDto(t.getShiftDayEmployee().getEmployees()))
+                    .date(t.getShiftDayEmployee().getDate())
                     .shift(mapper.convertToShiftDto(t.getShift()))
                     .patientSlot(t.getPatientSlot())
                     .build();
@@ -169,8 +169,8 @@ public class ShiftEmployeeServiceImpl implements ShiftEmployeeService{
         return shiftEmployees.stream().map( t -> {
             return ShiftEmployeeDto.builder()
                     .id(t.getId())
-                    .employeeDto(mapper.convertToEmployeeDto(t.getEmployees()))
-                    .date(t.getDate())
+                    .employeeDto(mapper.convertToEmployeeDto(t.getShiftDayEmployee().getEmployees()))
+                    .date(t.getShiftDayEmployee().getDate())
                     .shift(mapper.convertToShiftDto(t.getShift()))
                     .patientSlot(t.getPatientSlot())
                     .build();

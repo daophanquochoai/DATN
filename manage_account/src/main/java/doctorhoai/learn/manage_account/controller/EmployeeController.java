@@ -12,10 +12,12 @@ import doctorhoai.learn.manage_account.service.employee.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -195,6 +197,19 @@ public class EmployeeController {
                 ResponseObject.builder()
                         .message(EMessageResponse.UPDATE_DATA_SUCCESSFUL.getMessage())
                         .data(employeeService.resetPassword(phone))
+                        .build()
+        );
+    }
+
+    @GetMapping("/count-shifts")
+    public ResponseEntity<ResponseObject> countShiftInAppointments(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ){
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .message(EMessageResponse.GET_DATA_SUCCESSFUL.getMessage())
+                        .data(employeeService.getTopEmployees(startDate, endDate, 5))
                         .build()
         );
     }

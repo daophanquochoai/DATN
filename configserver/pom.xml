@@ -100,7 +100,7 @@
                 <version>3.4.1</version>
                 <configuration>
                     <to>
-                        <image>doctorhoai/datn_config:h2</image>
+                        <image>doctorhoai/datn_config:z2</image>
                     </to>
                 </configuration>
             </plugin>

@@ -72,7 +72,7 @@ public class AppointmentRecordServiceImpl implements AppointRecordService{
             if (followUpVisit.getFollowUpDate().isAfter(shiftEmployeeDto.getDate())) {
                 throw new BadException("Ngày tái khám phải trước\n ngày khám ban đầu!");
             }
-            if( followUpVisit.getAppointmentRecord().getAppointment().getServiceId() != appointment.getServiceId()){
+            if( !followUpVisit.getAppointmentRecord().getAppointment().getServiceId().equals(appointment.getServiceId())){
                 throw new BadException("Dịch vụ của cuộc hẹn tái khám không khớp!");
             }
             followUpVisit.setAppointment(appointment);

@@ -14,8 +14,13 @@ import java.util.UUID;
 
 @Repository
 public interface FollowUpVisitRepository extends JpaRepository<FollowUpVisit, UUID> {
+    @Query("""
+        SELECT f FROM FollowUpVisit f
+        JOIN FETCH f.appointmentRecord ar
+        JOIN FETCH ar.appointment a
+        WHERE f.followUpId = :id
+    """)
     Optional<FollowUpVisit> getFollowUpVisitByFollowUpId(UUID id);
-
     @Query("""
         SELECT f 
         FROM FollowUpVisit f 

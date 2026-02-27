@@ -4,6 +4,7 @@ import doctorhoai.learn.manage_medical.controller.constant.EMessageResponse;
 import doctorhoai.learn.manage_medical.dto.request.AppointmentCreate;
 import doctorhoai.learn.manage_medical.dto.ResponseObject;
 import doctorhoai.learn.manage_medical.dto.filter.AppointmentFilter;
+import doctorhoai.learn.manage_medical.dto.request.ShiftCount;
 import doctorhoai.learn.manage_medical.feign.dto.shift.ShiftEmployeeDto;
 import doctorhoai.learn.manage_medical.service.appointment.AppointmentService;
 import doctorhoai.learn.manage_medical.service.follow_up_visit.FollowUpVisitService;
@@ -181,6 +182,24 @@ public class AppointmentController {
                 ResponseObject.builder()
                         .message(EMessageResponse.GET_DATA_SUCCESSFULLY.getMessage())
                         .data(appointmentService.getAppointmentByShiftId(id))
+                        .build()
+        );
+    }
+
+    @GetMapping("/count-shifts")
+    public ResponseEntity<ResponseObject> countShiftInAppointments(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        return ResponseEntity.ok(
+                ResponseObject.builder()
+                        .message(EMessageResponse.GET_DATA_SUCCESSFULLY.getMessage())
+                        .data(appointmentService.countShiftInAppointments(
+                            ShiftCount.builder()
+                                    .startDate(startDate)
+                                    .endDate(endDate)
+                                    .build()
+                        ))
                         .build()
         );
     }

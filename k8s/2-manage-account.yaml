@@ -15,9 +15,9 @@ spec:
     metadata:
       annotations:
         kompose.version: 1.35.0 (9532ceef3)
-        prometheus.io/scrape: "true"                 # ✅ bật scrape
-        prometheus.io/path: "/actuator/prometheus"   # ✅ đường metrics Spring Boot
-        prometheus.io/port: "9002"                   # ✅ cổng container
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "9002"
       labels:
         io.kompose.service: manage-account
     spec:
@@ -40,26 +40,37 @@ spec:
           envFrom:
             - secretRef:
                 name: account-secret
-          image: doctorhoai/datn_manage_account:k15
+          image: doctorhoai/datn_manage_account:z3
           resources:
             requests:
-              memory: 512Mi
-              cpu: 200m
+              cpu: "300m"
+              memory: "768Mi"
             limits:
-              memory: 1024Mi
-              cpu: 1000m
+              cpu: "600m"
+              memory: "1229Mi"
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 9002
+            failureThreshold: 60
+            periodSeconds: 5
+            timeoutSeconds: 5
+
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 9002
-            initialDelaySeconds: 60
+            initialDelaySeconds: 0
+            failureThreshold: 3
             periodSeconds: 10
             timeoutSeconds: 5
+
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 9002
-            initialDelaySeconds: 60
+            initialDelaySeconds: 0
+            failureThreshold: 3
             periodSeconds: 10
             timeoutSeconds: 5
           name: manage-account
@@ -73,9 +84,9 @@ kind: Service
 metadata:
   annotations:
     kompose.version: 1.35.0 (9532ceef3)
-    prometheus.io/scrape: "true"                 # ✅ bật scrape
-    prometheus.io/path: "/actuator/prometheus"   # ✅ đường metrics Spring Boot
-    prometheus.io/port: "9002"                   # ✅ cổng container
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/actuator/prometheus"
+    prometheus.io/port: "9002"
   labels:
     io.kompose.service: manage-account
   name: manage-account

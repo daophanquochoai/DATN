@@ -22,7 +22,6 @@ public class ShiftController {
 
 
     @PostMapping("list")
-    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
     ResponseEntity<ResponseObject> getShiftList(
             @RequestBody ShiftFilter filter
     )
@@ -40,7 +39,6 @@ public class ShiftController {
     }
 
     @PostMapping("/get/employee")
-    @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")
     ResponseEntity<ResponseObject> getShiftEmployee(
             @RequestBody ShiftEmployeeFilter filter
     )

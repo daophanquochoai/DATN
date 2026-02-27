@@ -19,7 +19,14 @@ spec:
         io.kompose.service: configserver
     spec:
       containers:
-        - image: doctorhoai/datn_config:k15
+        - image: doctorhoai/datn_config:z2
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+            limits:
+              cpu: "400m"
+              memory: "1Gi"
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness

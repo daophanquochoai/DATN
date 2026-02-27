@@ -19,12 +19,19 @@ spec:
         io.kompose.service: eurekaservice
     spec:
       containers:
-        - image: doctorhoai/datn_eureka:k15
+        - image: doctorhoai/datn_eureka:z2
           env:
             - name: SPRING_CONFIG_IMPORT
               value: configserver:http://configserver:8071
             - name: SPRING_ZIPKIN_BASE_URL
               value: http://zipkin:9411/api/v2/spans
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+            limits:
+              cpu: "400m"
+              memory: "1Gi"
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness

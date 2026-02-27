@@ -5,6 +5,7 @@ import doctorhoai.learn.manage_medical.dto.request.AppointmentCreate;
 import doctorhoai.learn.manage_medical.dto.AppointmentDto;
 import doctorhoai.learn.manage_medical.dto.filter.AppointmentFilter;
 import doctorhoai.learn.manage_medical.dto.filter.PageObject;
+import doctorhoai.learn.manage_medical.dto.request.ShiftCount;
 import doctorhoai.learn.manage_medical.feign.dto.employee.EmployeeDto;
 import doctorhoai.learn.manage_medical.feign.dto.shift.ShiftEmployeeDto;
 
@@ -27,4 +28,5 @@ public interface AppointmentService {
     Map<String, Integer> getAppointmentStatusCount(LocalDate startDate, LocalDate endDate);
     AppointmentRecordDto getOldAppointment(UUID employeeId, String icd10Id) throws ExecutionException, InterruptedException;
     List<AppointmentDto> getAppointmentByShiftId(UUID shiftId);
+    List<UUID> countShiftInAppointments(ShiftCount filter);
 }

@@ -3,6 +3,7 @@ package doctorhoai.learn.manage_account.feign.appointment;
 import doctorhoai.learn.manage_account.dto.ResponseObject;
 import doctorhoai.learn.manage_account.dto.ShiftEmployeeDto;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,5 +47,11 @@ public interface AppointmentFeign {
     @DeleteMapping("/shift-employee/{id}")
     ResponseEntity<ResponseObject> removeAppointmentByShiftId(
             @PathVariable UUID id
+    );
+
+    @GetMapping("/count-shifts")
+    ResponseEntity<ResponseObject> countShiftInAppointments(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     );
 }

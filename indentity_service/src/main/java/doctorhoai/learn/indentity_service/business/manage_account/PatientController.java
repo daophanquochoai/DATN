@@ -1,6 +1,5 @@
 package doctorhoai.learn.indentity_service.business.manage_account;
 
-import doctorhoai.learn.indentity_service.business.sms.SmsController;
 import doctorhoai.learn.indentity_service.dto.response.ResponseObject;
 import doctorhoai.learn.indentity_service.feign.dto.AccountStatus;
 import doctorhoai.learn.indentity_service.feign.dto.PatientsFilter;

@@ -178,6 +178,10 @@
             <scope>compile</scope>
         </dependency>
 		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
 		</dependency>
@@ -225,7 +229,7 @@
 				<version>3.4.1</version>
 				<configuration>
 					<to>
-						<image>doctorhoai/datn_identity:h3</image>
+						<image>doctorhoai/datn_identity:z2</image>
 					</to>
 				</configuration>
 			</plugin>

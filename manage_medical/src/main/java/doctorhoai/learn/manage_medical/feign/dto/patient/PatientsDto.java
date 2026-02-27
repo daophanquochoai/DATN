@@ -22,6 +22,7 @@ public class PatientsDto implements Serializable {
     private String fullName;
     private LocalDate dob;
     private boolean gender;
+    private String email;
     private String address;
     private String insuranceCode;
     private String emergencyContact;

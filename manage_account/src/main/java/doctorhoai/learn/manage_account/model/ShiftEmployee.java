@@ -21,10 +21,10 @@ public class ShiftEmployee extends BaseModel{
     @JoinColumn(name = "shift_id")
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
     private Shift shift;
-    private LocalDate date;
-    @JoinColumn(name = "employee_id")
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
-    private Employees employees;
     @Column(name = "patient_slot")
     private Integer patientSlot;
+
+    @JoinColumn(name = "shift_day_employee_id")
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
+    private ShiftDayEmployee shiftDayEmployee;
 }

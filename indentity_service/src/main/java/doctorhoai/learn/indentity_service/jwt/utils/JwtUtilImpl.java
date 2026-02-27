@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import doctorhoai.learn.base_domain.exception.ErrorException;
 import doctorhoai.learn.indentity_service.dto.response.ResponseObject;
+import doctorhoai.learn.indentity_service.feign.dto.EmployeeDto;
 import doctorhoai.learn.indentity_service.feign.manage_account.EmployeeFeign;
 import doctorhoai.learn.indentity_service.feign.manage_account.PatientFeign;
 import io.jsonwebtoken.Claims;
@@ -62,14 +63,27 @@ public class JwtUtilImpl implements JwtUtils{
         ResponseEntity<ResponseObject> data;
         if( authorities.get(0).equals("ROLE_PATIENT")){
             data = patientFeign.getPatientByPhoneNumber(userDetails.getUsername(), null);
+            claims.put("data", Objects.requireNonNull(data.getBody()).getData());
         } else {
             data = employeeFeign.getEmployeePhoneNumber(userDetails.getUsername(), null);
+            EmployeeDto employeeDto = objectMapper.convertValue(Objects.requireNonNull(data.getBody()).getData(), EmployeeDto.class);
+            employeeDto.setAccountId(null); // remove sensitive info
+            employeeDto.setProfile(null); // remove sensitive info
+            employeeDto.setServiceDto(null); // remove sensitive info
+            employeeDto.setSpecialization(null);
+            Map<String, Object> dataMap = objectMapper.convertValue(employeeDto, Map.class);
+
+            // Fix LocalDate convert (vì jjwt không serialize LocalDate được)
+            if (employeeDto.getDob() != null) {
+                dataMap.put("dob", employeeDto.getDob().toString());
+            }
+
+            claims.put("data", dataMap);
         }
         if( data.getStatusCode() != HttpStatus.OK){
             log.error("Can't get info account");
             throw new ErrorException("Can't get info account");
         }
-        claims.put("data", Objects.requireNonNull(data.getBody()).getData());
         claims.put("roles", authorities);
         return this.createToken(claims, userDetails.getUsername(), time);
     }

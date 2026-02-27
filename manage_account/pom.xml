@@ -175,7 +175,7 @@
                 <version>3.4.1</version>
                 <configuration>
                     <to>
-                        <image>doctorhoai/datn_manage_account:h2</image>
+                        <image>doctorhoai/datn_manage_account:z3</image>
                     </to>
                 </configuration>
             </plugin>

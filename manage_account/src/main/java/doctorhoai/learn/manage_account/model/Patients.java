@@ -24,6 +24,7 @@ public class Patients extends BaseModel implements Serializable {
     private Account accountId;
     @Column(name = "fullname", nullable = false, unique = true)
     private String fullName;
+    private String email;
     @Column(name = "dob", nullable = false)
     private LocalDate dob;
     @Column(name = "gender", nullable = false)
