@@ -26,6 +26,11 @@ Dự án **Hospital Management System** cung cấp giải pháp toàn diện cho
 - Khai thác AI để tự động hóa tra cứu, tư vấn và nhắc nhở.
 
 ---
+## 📑 Tài liệu
+
+- 📄 Báo cáo: [Clinic Management System Report](https://drive.google.com/file/d/1q_clWer57IcCypxWpnCzbhU99-wa5tVL/view?usp=sharing)
+- 
+---
 
 ## Kiến trúc hệ thống
 Hệ thống được xây dựng theo kiến trúc **Microservices** và **API-first**:
